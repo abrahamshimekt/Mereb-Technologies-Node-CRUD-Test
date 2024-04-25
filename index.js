@@ -1,11 +1,7 @@
 require('dotenv').config();
-const express = require("express");
-const app = express();
 const personRoutes = require("./routes/person");
 const middleware = require('./middlewares/middleware');
-const persons = require('./utils/db');
-app.set("db", persons);
-
+const app = require('./utils/app');
 // Middlewares
 app.use(middleware.parseRequestBodies);
 app.use(middleware.enableCORS);
