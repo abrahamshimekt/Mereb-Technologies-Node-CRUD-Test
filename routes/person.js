@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const CreatePersonValidator = require("../utils/validators/createPersonValidator");
 const persons = require("../utils/db");
-const UUID = require('uuid');
+const UUID = require("uuid");
 const app = express();
 app.set("db", persons);
 
@@ -14,13 +14,8 @@ router.get("/", async (req, res) => {
       .status(404)
       .json({ isSuccess: false, message: "No persons found" });
   }
-  return res
-    .status(200)
-    .json(
-      persons
-    );
+  return res.status(200).json(persons);
 });
-
 
 // get person detail
 router.get("/:personId", async (req, res) => {
@@ -29,10 +24,7 @@ router.get("/:personId", async (req, res) => {
   const index = persons.findIndex((person) => person.id == personId); // check if person exists
   if (index !== -1) {
     // if person is found
-    return res.status(200).json(
-     
- persons[index],
-    );
+    return res.status(200).json(persons[index]);
   } else {
     return res
       .status(404)
@@ -52,7 +44,6 @@ router.post("/", async (req, res) => {
   const persons = app.get("db"); // get the persons list from in memory db
   const personId = UUID.v4(); // generate UUID
 
-
   try {
     // add the person to persons list
     persons.push({
@@ -63,7 +54,6 @@ router.post("/", async (req, res) => {
     });
 
     app.set("db", persons); // save the current persons list
-    app.set("id", personId); // save the current id given to person created
 
     return res.status(200).json({
       isSuccess: true,
@@ -73,7 +63,7 @@ router.post("/", async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       isSuccess: false,
-      message: "Bad request unable to create",
+      message: "Bad request: unable to create",
       error: error.message,
     });
   }
