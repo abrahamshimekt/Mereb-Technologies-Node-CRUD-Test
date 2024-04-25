@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const CreatePersonValidator = require("../utils/validators/createPersonValidator");
 const persons = require("../utils/db");
+const UUID = require('uuid');
 const app = express();
 app.set("db", persons);
-app.set("id", 1);
 
 // get all persons
 router.get("/", async (req, res) => {
@@ -50,12 +50,13 @@ router.post("/", async (req, res) => {
     });
   }
   const persons = app.get("db"); // get the persons list from in memory db
-  const personId = app.get("id") + 1; // get the previous id given the person x and to avoid id duplication plus 1
+  const personId = UUID.v4(); // generate UUID
+
 
   try {
     // add the person to persons list
     persons.push({
-      id: String(personId),
+      id: personId,
       name: req.body.name,
       age: req.body.age,
       hobbies: req.body.hobbies,
