@@ -2,17 +2,22 @@ require('dotenv').config();
 const express = require("express");
 const app = express();
 const personRoutes = require("./routes/person");
-const { parseRequestBodies, enableCORS } = require('./middlewares/middleware');
+const middleware = require('./middlewares/middleware');
 const persons = require('./utils/db');
 app.set("db", persons);
-// Middlewares
-app.use(parseRequestBodies);
-app.use(enableCORS);
 
-// routes 
+// Middlewares
+app.use(middleware.parseRequestBodies);
+app.use(middleware.enableCORS);
+
+// Routes
 app.use("/person", personRoutes);
 
-// port
+// Error handling middleware
+app.use(middleware.handleNonExistingEndpoints);
+app.use(middleware.handleError);
+
+// Port
 const PORT = process.env.PORT || 3000;
 
 if (require.main === module) {
